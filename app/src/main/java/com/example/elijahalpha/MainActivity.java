@@ -3,6 +3,8 @@ package com.example.elijahalpha;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -11,8 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
 
     private Button backButton;
-    private Button buttonAsNoriu;
-    private Button buttonMan;
+//    private Button buttonAsNoriu;
+    private ImageButton imageButtonAsNoriu;
+//    private Button buttonMan;
+    private ImageButton imageButtonMan;
     private LinearLayout optionLayout;
 
     @Override
@@ -20,8 +24,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        buttonAsNoriu = findViewById(R.id.button_as_noriu);
-        buttonMan = findViewById(R.id.button_man);
+        imageButtonAsNoriu = findViewById(R.id.imageButtonAsNoriu);
+        imageButtonMan = findViewById(R.id.imageButtonMan);
         optionLayout = findViewById(R.id.option_layout);
 
         backButton = new Button(MainActivity.this);
@@ -30,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
         showHomeScreen();
 
         // Create primary option buttons
-        Button valgytiButton = createButton("Valgyti...");
+//        Button valgytiButton = createButton("Valgyti...");
+        ImageButton valgytiImageButton = createImageButton("Valgyti...", R.drawable.valgyti);
         Button eitiButton = createButton("Eiti...");
         Button sokinetiButton = createButton("Šokinėti...");
         Button vaziuotiButton = createButton("Važiuoti...");
@@ -66,30 +71,33 @@ public class MainActivity extends AppCompatActivity {
         Button backButton = createButton("Grįžti į pradinį meniu");
 
         // Show primary options when "AŠ NORIU" is clicked
-        buttonAsNoriu.setOnClickListener(new View.OnClickListener() {
+        imageButtonAsNoriu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "AŠ NORIU clicked!", Toast.LENGTH_SHORT).show();
 
                 // Hide both "AŠ NORIU..." and "MAN..." buttons
-                buttonAsNoriu.setVisibility(View.GONE);
-                buttonMan.setVisibility(View.GONE);
+                imageButtonAsNoriu.setVisibility(View.GONE);
+                imageButtonMan.setVisibility(View.GONE);
 
                 // Show primary options
-                showPrimaryOptions(optionLayout, valgytiButton, eitiButton, sokinetiButton, vaziuotiButton);
+                showPrimaryOptions(optionLayout, eitiButton, sokinetiButton, vaziuotiButton);
+                valgytiImageButton.setVisibility(View.VISIBLE);
+                optionLayout.addView(valgytiImageButton);
+
                 optionLayout.addView(backButton);
             }
         });
 
         // Show primary options when "MAN" is clicked ------------------------------------------------------+++
-        buttonMan.setOnClickListener(new View.OnClickListener() {
+        imageButtonMan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "MAN clicked!", Toast.LENGTH_SHORT).show();
 
                 // Hide both "AŠ NORIU..." and "MAN..." buttons
-                buttonAsNoriu.setVisibility(View.GONE);
-                buttonMan.setVisibility(View.GONE);
+                imageButtonAsNoriu.setVisibility(View.GONE);
+                imageButtonMan.setVisibility(View.GONE);
 
                 // Show primary options
                 showPrimaryOptions(optionLayout, skaudaButton, saltaButton, karstaButton, nepatoguButton);
@@ -98,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Click listener for "Valgyti"
-        valgytiButton.setOnClickListener(new View.OnClickListener() {
+        valgytiImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "Valgyti clicked!", Toast.LENGTH_SHORT).show();
@@ -327,8 +335,8 @@ public class MainActivity extends AppCompatActivity {
     private void showHomeScreen() {
         // Hide all buttons and layout
         optionLayout.removeAllViews();
-        buttonAsNoriu.setVisibility(View.VISIBLE);
-        buttonMan.setVisibility(View.VISIBLE);
+        imageButtonAsNoriu.setVisibility(View.VISIBLE);
+        imageButtonMan.setVisibility(View.VISIBLE);
         backButton.setVisibility(View.GONE);
     }
 
@@ -342,6 +350,14 @@ public class MainActivity extends AppCompatActivity {
         return button;
     }
 
+    private ImageButton createImageButton(String contentDescription, int imageResource) {
+        ImageButton imageButton = new ImageButton(MainActivity.this);
+        imageButton.setContentDescription(contentDescription);
+        imageButton.setImageResource(imageResource); // Set drawable resource
+        imageButton.setScaleType(ImageView.ScaleType.CENTER_CROP); // Adjust as needed
+        return imageButton;
+    }
+
     // Helper function to hide all primary options
     private void hidePrimaryOptions(LinearLayout optionLayout, Button... buttons) {
         optionLayout.removeAllViews(); // Clear all views first
@@ -351,7 +367,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Helper function to show primary options
-    private void showPrimaryOptions(LinearLayout optionLayout, Button... buttons) {
+    private void showPrimaryOptions(LinearLayout layout, Button... buttons) {
         optionLayout.removeAllViews(); // Clear all views first
         for (Button button : buttons) {
             optionLayout.addView(button);
