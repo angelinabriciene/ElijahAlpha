@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 
@@ -45,36 +46,117 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
         optionLayout = findViewById(R.id.optionLayout);
     }
 
-    // Handle RecyclerView item clicks
     @Override
     public void onItemClick(Item item) {
         optionLayout.removeAllViews();
 
         switch (item.getText()) {
             case "Valgyti":
-                // Show secondary options for "Valgyti"
-                optionLayout.addView(createButton("Sriuba"));
-                optionLayout.addView(createButton("Makaronai"));
-                optionLayout.addView(createButton("Atgal")); // Back button
+                handleOption("Valgyti");
+                List<Item> valgytiItems = new ArrayList<>();
+                valgytiItems.add(new Item(R.drawable.sriuba, "Sriuba"));
+                valgytiItems.add(new Item(R.drawable.makaronai, "Makaronai"));
+                showSecondaryOptions(valgytiItems);
+                optionLayout.addView(createButton("Atgal"));
                 break;
             case "Eiti":
-                // Show secondary options for "Eiti"
-                optionLayout.addView(createButton("Į lauką"));
-                optionLayout.addView(createButton("Namo"));
-                optionLayout.addView(createButton("Atgal")); // Back button
+                handleOption("Eiti");
+                List<Item> eitiItems = new ArrayList<>();
+                eitiItems.add(new Item(R.drawable.namo, "Namo"));
+                eitiItems.add(new Item(R.drawable.parduotuve, "Į Parduotuvę"));
+                showSecondaryOptions(eitiItems);
+                optionLayout.addView(createButton("Atgal"));
                 break;
             case "Šokinėti":
-                // If No secondary options for this example, just showing a message
-                optionLayout.addView(createButton("Šokinėju!"));
-                optionLayout.addView(createButton("Atgal")); // Back button
+                handleOption("Šokinėti");
+                List<Item> sokinetiItems = new ArrayList<>();
+                sokinetiItems.add(new Item(R.drawable.lova, "And lovos"));
+                sokinetiItems.add(new Item(R.drawable.batutas, "Ant batuto"));
+                showSecondaryOptions(sokinetiItems);
+                optionLayout.addView(createButton("Atgal"));
                 break;
             case "Važiuoti":
-                // Show secondary options for "Važiuoti"
-                optionLayout.addView(createButton("Į mokyklą"));
-                optionLayout.addView(createButton("Į parką"));
-                optionLayout.addView(createButton("Atgal")); // Back button
+                handleOption("Važiuoti");
+                List<Item> vaziuotiItems = new ArrayList<>();
+                vaziuotiItems.add(new Item(R.drawable.ezero, "Prie ežero"));
+                vaziuotiItems.add(new Item(R.drawable.parkas, "Į parką"));
+                showSecondaryOptions(vaziuotiItems);
+                optionLayout.addView(createButton("Atgal"));
+                break;
+            case "Sriuba":
+                handleOption("Sriubą");
+                Item sriubaItem = new Item(R.drawable.sriuba, "Sriuba");
+                List<Item> sriubaList = new ArrayList<>();
+                sriubaList.add(sriubaItem);
+                showSecondaryOptions(sriubaList);
+                optionLayout.addView(createButton("Atgal"));
+                break;
+            case "Makaronai":
+                handleOption("Makaronus");
+                Item makaronaiItem = new Item(R.drawable.makaronai, "Makaronai");
+                List<Item> makaronaiList = new ArrayList<>();
+                makaronaiList.add(makaronaiItem);
+                showSecondaryOptions(makaronaiList);
+                optionLayout.addView(createButton("Atgal"));
+                break;
+            case "Į Parduotuvę":
+                handleOption("Į Parduotuvę");
+                Item parduotuveItem = new Item(R.drawable.parduotuve, "Į Parduotuvę");
+                List<Item> parduotuveList = new ArrayList<>();
+                parduotuveList.add(parduotuveItem);
+                showSecondaryOptions(parduotuveList);
+                optionLayout.addView(createButton("Atgal"));
+                break;
+            case "Namo":
+                handleOption("Namo");
+                Item namoItem = new Item(R.drawable.namo, "Namo");
+                List<Item> namoList = new ArrayList<>();
+                namoList.add(namoItem);
+                showSecondaryOptions(namoList);
+                optionLayout.addView(createButton("Atgal"));
+                break;
+            case "And lovos":
+                handleOption("And lovos");
+                Item lovaItem = new Item(R.drawable.lova, "And lovos");
+                List<Item> lovaList = new ArrayList<>();
+                lovaList.add(lovaItem);
+                showSecondaryOptions(lovaList);
+                optionLayout.addView(createButton("Atgal"));
+                break;
+            case "Ant batuto":
+                handleOption("Ant batuto");
+                Item batutasItem = new Item(R.drawable.batutas, "Ant batuto");
+                List<Item> batutasList = new ArrayList<>();
+                batutasList.add(batutasItem);
+                showSecondaryOptions(batutasList);
+                optionLayout.addView(createButton("Atgal"));
+                break;
+            case "Prie ežero":
+                handleOption("Prie ežero");
+                Item ezeroItem = new Item(R.drawable.ezero, "Prie ežero");
+                List<Item> ezeroList = new ArrayList<>();
+                ezeroList.add(ezeroItem);
+                showSecondaryOptions(ezeroList);
+                optionLayout.addView(createButton("Atgal"));
+                break;
+            case "Į parką":
+                handleOption("Į parką");
+                Item parkaItem = new Item(R.drawable.parkas, "Į parką");
+                List<Item> parkaList = new ArrayList<>();
+                parkaList.add(parkaItem);
+                showSecondaryOptions(parkaList);
+                optionLayout.addView(createButton("Atgal"));
+                break;
+            default:
                 break;
         }
+    }
+
+    private void handleOption(String message) {
+        // For example, you can show a message or play a sound here
+        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+
+        // Optionally, you could add more actions, like playing a sound, changing images, etc.
     }
 
     // Helper method to create buttons dynamically
@@ -104,5 +186,26 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
             optionLayout.addView(createButton("Pasirinkote: " + text)); // Display the choice
             optionLayout.addView(createButton("Atgal")); // Add back button again
         }
+    }
+
+    private void showSecondaryOptions(List<Item> items) {
+        optionLayout.removeAllViews(); // Clear previous options
+
+        // Create a new RecyclerView for secondary options
+        RecyclerView secondaryRecyclerView = new RecyclerView(this);
+        secondaryRecyclerView.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        ));
+
+        // Set up the layout manager for grid display (adjust columns as needed)
+        secondaryRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+
+        // Create and set the adapter for secondary options
+        CustomAdapter secondaryAdapter = new CustomAdapter(items, this, this);
+        secondaryRecyclerView.setAdapter(secondaryAdapter);
+
+        // Add the new RecyclerView to the option layout
+        optionLayout.addView(secondaryRecyclerView);
     }
 }
