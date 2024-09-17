@@ -47,11 +47,17 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
         setContentView(R.layout.activity_main);
 
         // Button to open gallery
-        findViewById(R.id.uploadImageButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openGallery();
-            }
+//        findViewById(R.id.uploadImageButton).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                openGallery();
+//            }
+//        });
+
+        Button createOptionButton = findViewById(R.id.createOptionButton);
+        createOptionButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, CreateOptionActivity.class);
+            startActivity(intent);
         });
 
         // Initialize RecyclerView and layout manager
