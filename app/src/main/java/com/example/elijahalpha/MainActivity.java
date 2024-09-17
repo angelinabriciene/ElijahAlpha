@@ -1,22 +1,29 @@
 package com.example.elijahalpha;
 
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-import android.widget.LinearLayout;
-import android.widget.Toast;
-
-import androidx.recyclerview.widget.GridLayoutManager;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements CustomAdapter.OnItemClickListener {
 
+    private List<Option> optionList;
+    private TextToSpeech tts;
     private RecyclerView recyclerView;
     private CustomAdapter adapter;
     private List<Item> itemList;
@@ -31,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2)); // 2 columns for grid layout
 
+        fetchOptions();
+
         // Create button list for the RecyclerView
         itemList = new ArrayList<>();
         itemList.add(new Item(R.drawable.valgyti, "Valgyti"));
@@ -44,6 +53,24 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
 
         // Initialize the layout for dynamically showing secondary options
         optionLayout = findViewById(R.id.optionLayout);
+
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    // Set the language to Lithuanian (or any desired language)
+                    int result = tts.setLanguage(new Locale("lt", "LT"));
+
+                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("TTS", "Lithuanian language is not supported!");
+                    } else {
+                        Log.d("TTS", "TTS is initialized successfully!");
+                    }
+                } else {
+                    Log.e("TTS", "TTS initialization failed!");
+                }
+            }
+        });
     }
 
     @Override
@@ -152,11 +179,55 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
         }
     }
 
+    private void fetchOptions() {
+        OptionApi optionApi = ApiClient.getClient().create(OptionApi.class);
+        Call<List<Option>> call = optionApi.getOptions();
+
+        call.enqueue(new Callback<List<Option>>() {
+            @Override
+            public void onResponse(Call<List<Option>> call, Response<List<Option>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    // Convert List<Option> to List<Item>
+                    List<Option> optionList = response.body();
+                    List<Item> itemList = new ArrayList<>();
+
+                    for (Option option : optionList) {
+                        // Convert each Option to an Item (using Option's name and imageUrl)
+                        itemList.add(new Item(option.getImageUrl(), option.getName()));
+                    }
+
+                    // Use the converted itemList with your CustomAdapter
+                    adapter = new CustomAdapter(itemList, MainActivity.this, item -> {
+                        // Handle click event for items
+                        Toast.makeText(MainActivity.this, item.getText(), Toast.LENGTH_SHORT).show();
+                    });
+
+                    recyclerView.setAdapter(adapter);
+                } else {
+                    Log.e("API_ERROR", "Failed to fetch options");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Option>> call, Throwable t) {
+                Log.e("API_ERROR", "Error: " + t.getMessage());
+            }
+        });
+    }
+
+
     private void handleOption(String message) {
         // For example, you can show a message or play a sound here
         Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
 
         // Optionally, you could add more actions, like playing a sound, changing images, etc.
+        speakText(message);
+    }
+
+    private void speakText(String text) {
+        if (tts != null) {
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+        }
     }
 
     // Helper method to create buttons dynamically
@@ -207,5 +278,14 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
 
         // Add the new RecyclerView to the option layout
         optionLayout.addView(secondaryRecyclerView);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
+        super.onDestroy();
     }
 }
