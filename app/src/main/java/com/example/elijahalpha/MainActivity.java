@@ -1,10 +1,6 @@
 package com.example.elijahalpha;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
@@ -12,24 +8,13 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements CustomAdapter.OnItemClickListener {
 
@@ -45,20 +30,6 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Button to open gallery
-//        findViewById(R.id.uploadImageButton).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                openGallery();
-//            }
-//        });
-
-        Button createOptionButton = findViewById(R.id.createOptionButton);
-        createOptionButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, CreateOptionActivity.class);
-            startActivity(intent);
-        });
 
         // Initialize RecyclerView and layout manager
         recyclerView = findViewById(R.id.recyclerView);
@@ -96,52 +67,6 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
                 }
             }
         });
-    }
-
-    // Open gallery to select an image
-    private void openGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-    }
-
-    // Handle selected image
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
-            Uri imageUri = data.getData();
-            // Now you can upload the image
-            uploadImage(imageUri);
-        }
-    }
-
-    private void uploadImage(Uri imageUri) {
-        File destinationDirectory = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "MyAppImages");
-        if (!destinationDirectory.exists()) {
-            destinationDirectory.mkdirs(); // Create the directory if it doesn't exist
-        }
-
-        try {
-            // Create a file in the destination directory
-            File destinationFile = new File(destinationDirectory, "uploaded_image.jpg");
-            InputStream inputStream = getContentResolver().openInputStream(imageUri);
-            OutputStream outputStream = new FileOutputStream(destinationFile);
-
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = inputStream.read(buffer)) > 0) {
-                outputStream.write(buffer, 0, length);
-            }
-
-            outputStream.close();
-            inputStream.close();
-
-            Toast.makeText(this, "Image saved to " + destinationFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override

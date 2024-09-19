@@ -1,30 +1,18 @@
 package com.example.elijahalpha;
 
 public class Option {
-    private Long id;
-    private String name;
-    private String imageUrl;
+    private String name;      // Option name
+    private int imageResId;   // Resource ID or file path for the image
+    private String category;  // Primary category (like "Valgyti", "Eiti", etc.)
 
-    // Default constructor
-    public Option() {
-    }
-
-    // Constructor with parameters
-    public Option(Long id, String name, String imageUrl) {
-        this.id = id;
+    // Constructor for creating a new option
+    public Option(String name, int imageResId, String category) {
         this.name = name;
-        this.imageUrl = imageUrl;
+        this.imageResId = imageResId;
+        this.category = category;
     }
 
-    // Getter and setter methods
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    // Getters and Setters
     public String getName() {
         return name;
     }
@@ -33,11 +21,19 @@ public class Option {
         this.name = name;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public int getImageResId() {
+        return imageResId;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageResId(int imageResId) {
+        this.imageResId = imageResId;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
