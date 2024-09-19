@@ -11,6 +11,14 @@
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
+    <Button
+        android:id="@+id/open_settings_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp" />
+
     <!-- Layout for showing secondary options dynamically -->
     <LinearLayout
         android:id="@+id/optionLayout"
