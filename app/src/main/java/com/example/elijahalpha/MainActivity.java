@@ -22,7 +22,7 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements CustomAdapter.OnItemClickListener {
 
-    private static final int PICK_IMAGE_REQUEST = 1;  // Add this to define the request code
+    private static final int PICK_IMAGE_REQUEST = 1;
     private List<Option> optionList;
     private TextToSpeech tts;
     private RecyclerView recyclerView;
@@ -40,10 +40,20 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2)); // 2 columns for grid layout
 
         Button openSettingsButton = findViewById(R.id.open_settings_button);
-        openSettingsButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-            startActivity(intent);
+        openSettingsButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                // After long press, open settings
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
+                return true;  // Indicate the long press was handled
+            }
         });
+
+        // Optional: Toast message if user presses, but doesn't hold long enough
+        openSettingsButton.setOnClickListener(v ->
+                Toast.makeText(MainActivity.this, "Hold to open settings", Toast.LENGTH_SHORT).show()
+        );
 
         // Create button list for the RecyclerView
         itemList = new ArrayList<>();
