@@ -148,165 +148,16 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
             selectedOptionSet = new HashSet<>();  // Initialize with an empty set if no options are found
         }
 
+        Log.d("MainActivity", "Retrieved options for category: " + category + " -> " + selectedOptionSet.toString());
+
         // Convert saved options into Item objects
         for (String option : selectedOptionSet) {
             switch (option) {
+                // Add cases for the secondary options
                 case "Namo":
                     selectedOptions.add(new Item(R.drawable.namo, "Namo"));
                     break;
-                case "Į parduotuvę":
-                    selectedOptions.add(new Item(R.drawable.parduotuve, "Į parduotuvę"));
-                    break;
-                case "Į parką":
-                    selectedOptions.add(new Item(R.drawable.parkas, "Į parką"));
-                    break;
-                case "Prie ežero":
-                    selectedOptions.add(new Item(R.drawable.ezero, "Prie ežero"));
-                    break;
-                case "Į miestą":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Į miestą"));
-                    break;
-                case "Prie fontano":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Prie fontano"));
-                    break;
-                case "Pas močiutę Meilę":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Pas močiutę Meilę"));
-                    break;
-                case "Pas močiutę Valę":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Pas močiutę Valę"));
-                    break;
-                case "Į mišką":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Į mišką"));
-                    break;
-                case "Pasivaikščioti":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Pasivaikščioti"));
-                    break;
-                case "Į kiemą":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Į kiemą"));
-                    break;
-                case "Gaminti maistą":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Gaminti maistą"));
-                    break;
-                case "Sriubą":
-                    selectedOptions.add(new Item(R.drawable.sriuba, "Sriubą"));
-                    break;
-                case "Mėsą":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Mėsą"));
-                    break;
-                case "Dešrelių":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Dešrelių"));
-                    break;
-                case "Bulvyčių":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Bulvyčių"));
-                    break;
-                case "Ledų":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Ledų"));
-                    break;
-                case "Guminukų":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Guminukų"));
-                    break;
-                case "Picą":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Picą"));
-                    break;
-                case "Makaronų":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Makaronų"));
-                    break;
-                case "Kiaušinių":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Kiaušinių"));
-                    break;
-                case "Salotų":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Salotų"));
-                    break;
-                case "Čipsų":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Čipsų"));
-                    break;
-                case "Troškinį":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Troškinį"));
-                    break;
-                case "Trapučių":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Trapučių"));
-                    break;
-                case "Šokinėti":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Šokinėti"));
-                    break;
-                case "Čiuožinėti":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Čiuožinėti"));
-                    break;
-                case "Laistyti":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Laistyti"));
-                    break;
-                case "Maudytis":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Maudytis"));
-                    break;
-                case "Persirengti":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Persirengti"));
-                    break;
-                case "Kartu pagulėti":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Kartu pagulėti"));
-                    break;
-                case "Į dušą":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Į dušą"));
-                    break;
-                case "Į tualetą":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Į tualetą"));
-                    break;
-                case "Miegoti":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Miegoti"));
-                    break;
-                case "Galvą":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Galvą"));
-                    break;
-                case "Dantuką":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Dantuką"));
-                    break;
-                case "Akytę":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Akytę"));
-                    break;
-                case "Gerklę":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Gerklę"));
-                    break;
-                case "Pilvuką":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Pilvuką"));
-                    break;
-                case "Ranką":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Ranką"));
-                    break;
-                case "Koją":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Koją"));
-                    break;
-                case "Siulčių":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Siulčių"));
-                    break;
-                case "Citrinų vandens":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Citrinų vandens"));
-                    break;
-                case "Vandens":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Vandens"));
-                    break;
-                case "Giros":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Giros"));
-                    break;
-                case "Limonado":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Limonado"));
-                    break;
-                case "Pavargęs":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Pavargęs"));
-                    break;
-                case "Piktas":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Piktas"));
-                    break;
-                case "Bijau":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Bijau"));
-                    break;
-                case "Liūdnas":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Liūdnas"));
-                    break;
-                case "Džiaugiuosi":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Džiaugiuosi"));
-                    break;
-                case "Alkanas":
-                    selectedOptions.add(new Item(R.drawable.drugelis, "Alkanas"));
-                    break;
+                // (Other options go here...)
             }
         }
 
