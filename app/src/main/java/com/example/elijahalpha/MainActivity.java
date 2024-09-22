@@ -22,40 +22,31 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements CustomAdapter.OnItemClickListener {
 
-    private static final int PICK_IMAGE_REQUEST = 1;
-    private List<Option> optionList;
     private TextToSpeech tts;
     private RecyclerView recyclerView;
     private CustomAdapter adapter;
     private List<Item> itemList;
-    private LinearLayout optionLayout; // Layout to dynamically show secondary options
+    private LinearLayout optionLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize RecyclerView and layout manager
         recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2)); // 2 columns for grid layout
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         Button openSettingsButton = findViewById(R.id.open_settings_button);
         openSettingsButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                // After long press, open settings
                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
-                return true;  // Indicate the long press was handled
+                return true;
             }
         });
+        openSettingsButton.setOnClickListener(v -> Toast.makeText(MainActivity.this, "Hold to open settings", Toast.LENGTH_SHORT).show());
 
-        // Optional: Toast message if user presses, but doesn't hold long enough
-        openSettingsButton.setOnClickListener(v ->
-                Toast.makeText(MainActivity.this, "Hold to open settings", Toast.LENGTH_SHORT).show()
-        );
-
-        // Create button list for the RecyclerView
         itemList = new ArrayList<>();
         itemList.add(new Item(R.drawable.vaziuoti, "Važiuoti"));
         itemList.add(new Item(R.drawable.eiti, "Eiti"));
@@ -65,21 +56,16 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
         itemList.add(new Item(R.drawable.drugelis, "Skauda"));
         itemList.add(new Item(R.drawable.drugelis, "Aš"));
 
-        // Initialize adapter and set it to the RecyclerView
         adapter = new CustomAdapter(itemList, this, this);
         recyclerView.setAdapter(adapter);
 
-        // Initialize the layout for dynamically showing secondary options
         optionLayout = findViewById(R.id.optionLayout);
 
-        // Initialize TTS
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if (status == TextToSpeech.SUCCESS) {
-                    // Set the language to Lithuanian (or any desired language)
                     int result = tts.setLanguage(new Locale("lt", "LT"));
-
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Log.e("TTS", "Lithuanian language is not supported!");
                     } else {
@@ -95,13 +81,11 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
     @Override
     public void onItemClick(Item item) {
         optionLayout.removeAllViews();
-
         List<Item> secondaryOptions = new ArrayList<>();
-
         switch (item.getText()) {
             case "Važiuoti":
                 handleOption("Važiuoti");
-                secondaryOptions = getSelectedOptions("Važiuoti");
+                secondaryOptions = getSelectedOptions("Vaziuoti");
                 break;
             case "Eiti":
                 handleOption("Eiti");
@@ -125,50 +109,219 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
                 break;
             case "Aš":
                 handleOption("Aš");
-                secondaryOptions = getSelectedOptions("Aš");
+                secondaryOptions = getSelectedOptions("As");
                 break;
             default:
                 break;
         }
-
-        // Show dynamically selected options
         if (!secondaryOptions.isEmpty()) {
             showSecondaryOptions(secondaryOptions);
+        } else {
+            Log.d("MainActivity", "No secondary options to display.");
         }
     }
 
-    // Helper method to fetch selected options
     private List<Item> getSelectedOptions(String category) {
         List<Item> selectedOptions = new ArrayList<>();
-
-        // Retrieve selected options from shared preferences
         SharedPreferences prefs = getSharedPreferences("PARENT_SETTINGS", MODE_PRIVATE);
         Set<String> selectedOptionSet = prefs.getStringSet(category, new HashSet<>());
-        if (selectedOptionSet == null) {
-            selectedOptionSet = new HashSet<>();  // Initialize with an empty set if no options are found
-        }
 
-        Log.d("MainActivity", "Retrieved options for category: " + category + " -> " + selectedOptionSet.toString());
-
-        // Convert saved options into Item objects
         for (String option : selectedOptionSet) {
-            switch (option) {
-                // Add cases for the secondary options
-                case "Namo":
-                    selectedOptions.add(new Item(R.drawable.namo, "Namo"));
+            switch (category) {
+                case "Vaziuoti":
+                    switch (option) {
+                        case "vaziuoti_namo_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Namo"));
+                            break;
+                        case "vaziuoti_parduotuve_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Į parduotuvę"));
+                            break;
+                        case "vaziuoti_parkas_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Į parką"));
+                            break;
+                        case "vaziuoti_ezero_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Prie ežero"));
+                            break;
+                        case "vaziuoti_miesta_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Į miestą"));
+                            break;
+                        case "vaziuoti_fontano_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Prie fontano"));
+                            break;
+                        case "vaziuoti_mociute_meile_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Pas močiutę Meilę"));
+                            break;
+                        case "vaziuoti_mociute_vale_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Pas močiutę Valę"));
+                            break;
+                    }
                     break;
-                // (Other options go here...)
+                case "Eiti":
+                    switch (option) {
+                        case "eiti_miska_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Į mišką"));
+                            break;
+                        case "eiti_pasivaikscioti_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Pasivaikščioti"));
+                            break;
+                        case "eiti_kiema_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Į kiemą"));
+                            break;
+                        case "eiti_gaminti_maista_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Gaminti maistą"));
+                            break;
+                    }
+                    break;
+                case "Valgyti":
+                    switch (option) {
+                        case "valgyti_sriuba_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Sriuba"));
+                            break;
+                        case "valgyti_mesa_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Mėsą"));
+                            break;
+                        case "valgyti_desreles_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Dešrelių"));
+                            break;
+                        case "valgyti_bulvytes_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Bulvyčių"));
+                            break;
+                        case "valgyti_ledu_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Ledų"));
+                            break;
+                        case "valgyti_guminuku_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Guminukų"));
+                            break;
+                        case "valgyti_pica_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Picą"));
+                            break;
+                        case "valgyti_makaronu_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Makaronų"));
+                            break;
+                        case "valgyti_kiausiniu_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Kiaušinių"));
+                            break;
+                        case "valgyti_salotu_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Salotų"));
+                            break;
+                        case "valgyti_cipsu_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Čipsų"));
+                            break;
+                        case "valgyti_troskini_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Troškinį"));
+                            break;
+                        case "valgyti_trapuciu_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Trapučių"));
+                            break;
+                    }
+                    break;
+                case "Noriu":
+                    switch (option) {
+                        case "noriu_sokineti_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Šokinėti"));
+                            break;
+                        case "noriu_ciuozineti_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Čiuožinėti"));
+                            break;
+                        case "noriu_laistyti_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Laistyti"));
+                            break;
+                        case "noriu_maudytis_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Maudytis"));
+                            break;
+                        case "noriu_persirengti_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Persirengti"));
+                            break;
+                        case "noriu_kartu_paguleti_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Kartu pagulėti"));
+                            break;
+                        case "noriu_dusas_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Į dušą"));
+                            break;
+                        case "noriu_tualetas_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Į tualetą"));
+                            break;
+                        case "noriu_miegoti_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Miegoti"));
+                            break;
+                    }
+                    break;
+                case "Gerti":
+                    switch (option) {
+                        case "gerti_sultciu_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Sultčių"));
+                            break;
+                        case "gerti_citrinu_vandens_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Citrinų vandens"));
+                            break;
+                        case "gerti_vandens_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Vandens"));
+                            break;
+                        case "gerti_giros_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Giros"));
+                            break;
+                        case "gerti_limonado_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Limonado"));
+                            break;
+                    }
+                    break;
+                case "As":
+                    switch (option) {
+                        case "as_pavarges_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Pavargęs"));
+                            break;
+                        case "as_piktas_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Piktas"));
+                            break;
+                        case "as_bijau_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Bijau"));
+                            break;
+                        case "as_liudnas_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Liūdnas"));
+                            break;
+                        case "as_dziaugiuosi_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Džiaugiuosi"));
+                            break;
+                        case "as_alkanas_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Alkanas"));
+                            break;
+                    }
+                    break;
+                case "Skauda":
+                    switch (option) {
+                        case "skauda_galva_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Galvą"));
+                            break;
+                        case "skauda_dantuka_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Dantuką"));
+                            break;
+                        case "skauda_akyte_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Akytę"));
+                            break;
+                        case "skauda_gerkle_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Gerklę"));
+                            break;
+                        case "skauda_pilvuka_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Pilvuką"));
+                            break;
+                        case "skauda_ranka_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Ranką"));
+                            break;
+                        case "skauda_koja_enabled":
+                            selectedOptions.add(new Item(R.drawable.drugelis, "Koją"));
+                            break;
+                    }
+                    break;
+                default:
+                    Log.d("MainActivity", "Unknown category: " + category);
+                    break;
             }
         }
-
         return selectedOptions;
     }
 
     private void handleOption(String message) {
-        // For example, you can show a message or play a sound here
         Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-
-        // Optionally, you could add more actions, like playing a sound, changing images, etc.
         speakText(message);
     }
 
@@ -178,73 +331,41 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
         }
     }
 
-    // Handle clicks for dynamically created secondary buttons
     private void handleSecondaryButtonClick(Item selectedItem) {
-        // Clear the layout
         optionLayout.removeAllViews();
-
-        // Display only the selected option
         List<Item> selectedItems = new ArrayList<>();
-        selectedItems.add(selectedItem); // Only add the selected item to be shown
-
-        // Call the method to show just the selected option
+        selectedItems.add(selectedItem);
         showSelectedOption(selectedItems);
-
-        // Voice the selected option
         speakText(selectedItem.getText());
     }
 
     private void showSelectedOption(List<Item> selectedItems) {
-        optionLayout.removeAllViews(); // Clear previous options
-
-        // Create a new RecyclerView for displaying the selected option
+        optionLayout.removeAllViews();
         RecyclerView selectedRecyclerView = new RecyclerView(this);
-        selectedRecyclerView.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        ));
-
-        // Set up the layout manager for grid display (just 1 column since we are displaying only 1 item)
+        selectedRecyclerView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         selectedRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-
-        // Create and set the adapter for the selected option
         CustomAdapter selectedAdapter = new CustomAdapter(selectedItems, this, new CustomAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Item item) {
-                // Repeatedly speak the selected option when clicked
                 speakText(item.getText());
             }
         });
         selectedRecyclerView.setAdapter(selectedAdapter);
-
-        // Add the new RecyclerView to the option layout
         optionLayout.addView(selectedRecyclerView);
     }
 
     private void showSecondaryOptions(List<Item> items) {
-        optionLayout.removeAllViews(); // Clear previous options
-
-        // Create a new RecyclerView for secondary options
+        optionLayout.removeAllViews();
         RecyclerView secondaryRecyclerView = new RecyclerView(this);
-        secondaryRecyclerView.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        ));
-
-        // Set up the layout manager for grid display (adjust columns as needed)
+        secondaryRecyclerView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         secondaryRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-
-        // Create and set the adapter for secondary options
         CustomAdapter secondaryAdapter = new CustomAdapter(items, this, new CustomAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Item item) {
-                // When a secondary option is clicked, clear the other options and show only the selected one
                 handleSecondaryButtonClick(item);
             }
         });
         secondaryRecyclerView.setAdapter(secondaryAdapter);
-
-        // Add the new RecyclerView to the option layout
         optionLayout.addView(secondaryRecyclerView);
     }
 
