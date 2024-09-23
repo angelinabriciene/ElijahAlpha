@@ -3,7 +3,6 @@ package com.example.elijahalpha;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -31,7 +30,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         saveButton.setOnClickListener(v -> {
             savePreferences();
-            Toast.makeText(SettingsActivity.this, "Changes saved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SettingsActivity.this, "Pasirinkimai išsaugoti", Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
             startActivity(intent);
@@ -90,6 +89,6 @@ public class SettingsActivity extends AppCompatActivity {
         saveOptions("Skauda");
         saveOptions("As");
 
-        Toast.makeText(this, "Settings saved successfully", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Pasirinkimai išsaugoti", Toast.LENGTH_SHORT).show();
     }
 }

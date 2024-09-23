@@ -14,7 +14,7 @@
         android:backgroundTint="#FF0000"
         android:gravity="center"
         android:text="*"
-        android:textColor="#FFFFFF"
+        android:background="#989292"
         android:textSize="18sp"
         android:textStyle="bold" />
 
