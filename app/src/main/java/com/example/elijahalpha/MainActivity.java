@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
+        Button backButton = findViewById(R.id.back_button);
+
         Button openSettingsButton = findViewById(R.id.open_settings_button);
         openSettingsButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -45,6 +47,16 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
                 return true;
             }
         });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recyclerView.setVisibility(View.VISIBLE);
+                optionLayout.removeAllViews();
+                backButton.setVisibility(View.GONE);
+            }
+        });
+
         openSettingsButton.setOnClickListener(v -> Toast.makeText(MainActivity.this, "Palieskite ir laikykite", Toast.LENGTH_SHORT).show());
 
         itemList = new ArrayList<>();
@@ -115,6 +127,9 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
                 break;
         }
         if (!secondaryOptions.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            Button backButton = findViewById(R.id.back_button);
+            backButton.setVisibility(View.VISIBLE);
             showSecondaryOptions(secondaryOptions);
         } else {
             Log.d("MainActivity", "No secondary options to display.");
@@ -321,7 +336,6 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
     }
 
     private void handleOption(String message) {
-//        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
         speakText(message);
     }
 
@@ -333,6 +347,7 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
 
     private void handleSecondaryButtonClick(Item selectedItem) {
         optionLayout.removeAllViews();
+        recyclerView.setVisibility(View.GONE);
         List<Item> selectedItems = new ArrayList<>();
         selectedItems.add(selectedItem);
         showSelectedOption(selectedItems);
